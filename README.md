@@ -2,16 +2,6 @@
 
 A modern React-based web application for comparing different Perplexity AI models side by side. This tool allows you to test prompts across multiple models simultaneously and compare their responses, token usage, and costs.
 
-## Quick Start
-
-```bash
-# Install the package
-npm install pplx-api-compare
-
-# Or using yarn
-yarn add pplx-api-compare
-```
-
 ## Features
 
 - Compare responses from multiple Perplexity models simultaneously
@@ -39,30 +29,42 @@ yarn add pplx-api-compare
 - npm or yarn
 - Perplexity API key ([Get one here](https://www.perplexity.ai/))
 
-## Development
+## Installation
 
-1. Clone the repository:
+### Option 1: Install as a Package
+
 ```bash
+# Using npm
+npm install pplx-api-compare
+
+# Or using yarn
+yarn add pplx-api-compare
+```
+
+### Option 2: Run from Source
+
+```bash
+# Clone the repository
 git clone https://github.com/jsandai/pplx-api-compare.git
 cd pplx-api-compare
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
+
+# Create .env file
+cp .env.example .env
+# Edit .env and add your Perplexity API key
 ```
 
-3. Create a `.env` file in the root directory:
-```bash
-VITE_PERPLEXITY_API_KEY=your_api_key_here
-```
+## Development
 
-4. Start the development server:
+Start the development server:
+
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`
+The application will be available at `http://localhost:3000` by default (or the next available port if 3000 is in use).
 
 ## Building for Production
 
@@ -86,7 +88,7 @@ npm install -g serve
 # Serve the production build
 serve -s dist
 ```
-The app will be available at `http://localhost:3000` by default.
+The app will be available at `http://localhost:3000` by default (or the next available port if 3000 is in use).
 
 2. Using Python's built-in server:
 ```bash
@@ -122,7 +124,6 @@ To preview the production build locally using Vite's preview server:
 ```bash
 npm run preview
 ```
-
 This will serve the production build at `http://localhost:4173` by default.
 
 ## Environment Variables
@@ -148,8 +149,3 @@ This will serve the production build at `http://localhost:4173` by default.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Built with [Perplexity AI API](https://docs.perplexity.ai/)
-- Uses [React Markdown](https://github.com/remarkjs/react-markdown) for rendering 

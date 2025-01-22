@@ -4,23 +4,30 @@ An experimental developer tool for comparing different Perplexity AI models side
 
 ## Quick Start
 
+
+- Clone the repository
 ```bash
-# Clone the repository
 git clone https://github.com/jsandai/pplx-api-compare.git
-
-# Enter the project directory
+```
+- Enter the project directory
+```bash
 cd pplx-api-compare
-
-# Install dependencies
+```
+- Install dependencies
+```bash
 npm install
-
-# Create your .env file from the example
+```
+- Create your .env file from the example
+```bash
 cp .env.example .env
+```
 
-# Get your API key from: https://docs.perplexity.ai/
-# Add your Perplexity API key to .env - alternatively paste it directly into the field within advanced settings
-# Start the development server
+- Get your API key from: https://docs.perplexity.ai/
 
+- Add your Perplexity API key to .env - alternatively paste it directly into the field within advanced settings
+
+- Start the development server
+```bash
 npm run dev
 ```
 

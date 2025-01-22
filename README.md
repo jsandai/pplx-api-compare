@@ -1,6 +1,30 @@
-# Perplexity Model Comparison
+# Perplexity API Model Comparison Tool
 
-A modern React-based web application for comparing different Perplexity AI models side by side. This tool allows you to test prompts across multiple models simultaneously and compare their responses, token usage, and costs.
+An experimental developer tool for comparing different Perplexity AI models side by side. Built to help developers evaluate and choose the right model for their applications by comparing responses, costs, and performance.
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/jsandai/pplx-api-compare.git
+
+# Enter the project directory
+cd pplx-api-compare
+
+# Install dependencies
+npm install
+
+# Create your .env file from the example
+cp .env.example .env
+
+# Get your API key from: https://docs.perplexity.ai/
+# Add your Perplexity API key to .env - alternatively paste it directly into the field within advanced settings
+# Start the development server
+
+npm run dev
+```
+
+The application will be available at `http://localhost:3000` by default (or the next available port if 3000 is in use).
 
 <img src="assets/comparison-dark.png" alt="Model Comparison Interface" width="100%">
 
@@ -15,6 +39,16 @@ A modern React-based web application for comparing different Perplexity AI model
 - Configurable parameters (temperature, max tokens)
 - API key management with local storage
 - Responsive design for all screen sizes
+
+## Purpose
+
+This tool is designed for developers to:
+- Test how different models respond to the same prompt
+- Compare response quality and characteristics
+- Understand the cost implications of each model
+- Make informed decisions about which model best fits their needs
+
+Note: This is an experimental developer utility, not intended for production use.
 
 ### Advanced Settings
 
@@ -45,128 +79,19 @@ The application includes configurable parameters for fine-tuning your comparison
 
 https://docs.perplexity.ai/guides/model-cards
 
-## Prerequisites
+## Development Notes
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Perplexity API key ([Get one here](https://www.perplexity.ai/))
+When running `npm install`, you may see several deprecation warnings related to ESLint's dependencies. These warnings are:
+- Coming from ESLint's internal dependencies
+- Don't affect the functionality of the application
+- Will be resolved in future ESLint updates
+- Can be safely ignored for this experimental tool
 
-## Installation
+## Requirements
 
-### Option 1: Install as a Package
-
-```bash
-# Using npm
-npm install pplx-api-compare
-
-# Or using yarn
-yarn add pplx-api-compare
-```
-
-### Option 2: Run from Source
-
-```bash
-# Clone the repository
-git clone https://github.com/jsandai/pplx-api-compare.git
-cd pplx-api-compare
-
-# Install dependencies
-npm install
-
-# Create .env file
-cp .env.example .env
-# Edit .env and add your Perplexity API key
-```
-
-## Development
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:3000` by default (or the next available port if 3000 is in use).
-
-## Building for Production
-
-To create a production build:
-
-```bash
-npm run build
-```
-
-This will create a `dist` directory with the production-ready files.
-
-### Launching the Production Build
-
-There are several ways to serve the production build:
-
-1. Using `serve` (recommended for simple deployments):
-```bash
-# Install serve globally
-npm install -g serve
-
-# Serve the production build
-serve -s dist
-```
-The app will be available at `http://localhost:3000` by default (or the next available port if 3000 is in use).
-
-2. Using Python's built-in server:
-```bash
-python -m http.server --directory dist
-```
-The app will be available at `http://localhost:8000`.
-
-3. Using PHP's built-in server:
-```bash
-php -S localhost:8000 -t dist
-```
-
-4. Using Nginx (for production environments):
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-    root /path/to/dist;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-Note: Since this is a Single Page Application (SPA), you'll need to configure your web server to redirect all routes to index.html.
-
-### Preview Mode
-
-To preview the production build locally using Vite's preview server:
-
-```bash
-npm run preview
-```
-This will serve the production build at `http://localhost:4173` by default.
-
-## Environment Variables
-
-- `VITE_PERPLEXITY_API_KEY`: Your Perplexity API key (optional, can be provided through UI)
-
-## Tech Stack
-
-- React 18
-- TypeScript
-- Vite
-- Axios for API requests
-- React Markdown for rendering responses
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- Node.js >= 18.0.0
+- npm (comes with Node.js)
+- Perplexity API key
 
 ## License
 

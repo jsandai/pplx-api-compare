@@ -18,10 +18,12 @@ A modern React-based web application for comparing different Perplexity AI model
 
 - Sonar Pro (200k context)
 - Sonar (127k context)
-- Legacy Models (128k context):
+- Legacy Models (127k context):
   - llama-3.1-sonar-small-128k-online
   - llama-3.1-sonar-large-128k-online
   - llama-3.1-sonar-huge-128k-online
+
+https://docs.perplexity.ai/guides/model-cards
 
 ## Prerequisites
 

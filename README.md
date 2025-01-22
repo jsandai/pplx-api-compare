@@ -2,6 +2,8 @@
 
 A modern React-based web application for comparing different Perplexity AI models side by side. This tool allows you to test prompts across multiple models simultaneously and compare their responses, token usage, and costs.
 
+![Model Comparison Interface](assets/comparison-light.png)
+
 ## Features
 
 - Compare responses from multiple Perplexity models simultaneously
@@ -14,14 +16,32 @@ A modern React-based web application for comparing different Perplexity AI model
 - API key management with local storage
 - Responsive design for all screen sizes
 
+### Advanced Settings
+
+The application includes configurable parameters for fine-tuning your comparisons:
+
+![Advanced Settings](assets/advanced-dark.png)
+
 ## Models Supported
 
 - Sonar Pro (200k context)
+  - Note: May perform multiple searches per request, each incurring the base cost
 - Sonar (127k context)
+  - Performs a single search per request
 - Legacy Models (127k context):
   - llama-3.1-sonar-small-128k-online
   - llama-3.1-sonar-large-128k-online
   - llama-3.1-sonar-huge-128k-online
+
+## Cost Estimation Notes
+
+- Base request cost: $0.005 per search
+- Sonar: Performs one search per request, making cost estimation straightforward
+- Sonar Pro: May perform multiple searches per request
+  - Each additional search incurs the base cost
+  - The exact number of searches performed is not provided in the API response
+  - Actual costs may be higher than the displayed estimate
+- Token costs are accurately tracked for all models
 
 https://docs.perplexity.ai/guides/model-cards
 

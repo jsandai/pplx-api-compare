@@ -116,7 +116,7 @@ const getModelInfo = (model: string): { cost: string, context: string } => {
   };
   if (isLegacyModel(model)) return {
     cost: `$${model.includes('small') ? '0.0002' : model.includes('large') ? '0.001' : '0.005'}/1k tokens`,
-    context: '128k'
+    context: '127k'
   };
   return { cost: '--', context: '--' };
 };
@@ -480,6 +480,9 @@ function App() {
                       <span className="tooltip-content">
                         Base request: {getCostBreakdown(model, response.tokens).requestCost}<br />
                         Tokens: {getCostBreakdown(model, response.tokens).tokenCost}
+                        {model === 'sonar-pro' && (
+                          <><br /><br />Note: Actual cost may be higher due to multiple searches</>
+                        )}
                       </span>
                     )}
                   </span>

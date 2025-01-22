@@ -1,0 +1,31 @@
+# Source
+src/
+public/
+
+# Development
+node_modules/
+.env
+.env.*
+*.log
+.cache/
+.vscode/
+.idea/
+
+# Build tools
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+
+# Git
+.git/
+.gitignore
+
+# Tests
+__tests__/
+*.test.*
+*.spec.*
+
+# Misc
+.DS_Store
+*.tgz
+.editorconfig 

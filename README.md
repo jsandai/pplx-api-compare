@@ -2,7 +2,7 @@
 
 A modern React-based web application for comparing different Perplexity AI models side by side. This tool allows you to test prompts across multiple models simultaneously and compare their responses, token usage, and costs.
 
-![Model Comparison Interface](assets/comparison-light.png)
+<img src="assets/comparison-dark.png" alt="Model Comparison Interface" width="100%">
 
 ## Features
 
@@ -20,7 +20,7 @@ A modern React-based web application for comparing different Perplexity AI model
 
 The application includes configurable parameters for fine-tuning your comparisons:
 
-![Advanced Settings](assets/advanced-dark.png)
+<img src="assets/advanced-light.png" alt="Advanced Settings" width="100%">
 
 ## Models Supported
 

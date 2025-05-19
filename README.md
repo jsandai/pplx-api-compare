@@ -39,7 +39,7 @@ The application will be available at `http://localhost:3000` by default (or the 
 
 - Compare responses from multiple Perplexity models simultaneously
 - Real-time cost calculation and token usage monitoring
-- Support for both Sonar and legacy models
+- Comparison of various Perplexity models including Sonar (Pro, Reasoning, Deep Research) and the offline r1-1776 model.
 - Dark/Light theme support
 - Markdown rendering for responses
 - Export results as JSON
@@ -65,24 +65,35 @@ The application includes configurable parameters for fine-tuning your comparison
 
 ## Models Supported
 
-- Sonar Pro (200k context)
-  - Note: May perform multiple searches per request, each incurring the base cost
-- Sonar (127k context)
-  - Performs a single search per request
-- Legacy Models (127k context):
-  - llama-3.1-sonar-small-128k-online
-  - llama-3.1-sonar-large-128k-online
-  - llama-3.1-sonar-huge-128k-online
+The tool supports the following models available through the Perplexity API:
+
+- **`sonar-pro`** (200k context)
+  - Advanced search model.
+  - *Note: May perform multiple searches per request.*
+- **`sonar`** (128k context)
+  - Lightweight, cost-effective search model.
+- **`sonar-reasoning-pro`** (128k context)
+  - Enhanced reasoning model with multi-step problem-solving and real-time search.
+- **`sonar-reasoning`** (128k context)
+  - Quick problem-solving and reasoning model.
+- **`sonar-deep-research`** (128k context)
+  - Expert-level research model for exhaustive analysis and detailed reports.
+- **`r1-1776`** (128k context)
+  - Offline chat model, does not use web search.
 
 ## Cost Estimation Notes
 
-- Base request cost: $0.005 per search
-- Sonar: Performs one search per request, making cost estimation straightforward
-- Sonar Pro: May perform multiple searches per request
-  - Each additional search incurs the base cost
-  - The exact number of searches performed is not provided in the API response
-  - Actual costs may be higher than the displayed estimate
-- Token costs are accurately tracked for all models
+- Costs are estimated based on Perplexity's published pricing.
+- **Request Costs:**
+    - `sonar`: $0.008 / request
+    - `sonar-pro`: $0.01 / request
+    - `sonar-reasoning`: $0.008 / request
+    - `sonar-reasoning-pro`: $0.01 / request
+    - `sonar-deep-research`: $0.005 / search query
+    - `r1-1776`: $0 / request (offline model)
+- *Note: For models with tiered request pricing (Sonar, Sonar Pro, Sonar Reasoning, Sonar Reasoning Pro), the costs displayed in the tool are based on the 'Medium' tier.*
+- **Sonar Pro & Multi-Search:** `sonar-pro` (and potentially other models like `sonar-deep-research` depending on query complexity) may perform multiple internal searches. The tool's request cost reflects the base API call; however, actual costs from Perplexity might be higher if multiple search queries are initiated by the model for a single API response. This is particularly relevant for `sonar-pro`.
+- **Token Costs:** Input, output, and (for `sonar-deep-research`) reasoning token costs are tracked based on API usage data and official pricing.
 
 https://docs.perplexity.ai/guides/model-cards
 

@@ -463,6 +463,9 @@ function App() {
             <div className="cost-info">
               Base request: $0.005 per search
             </div>
+            <div className="cost-info-tier-note" style={{fontSize: '0.8em', color: 'var(--text-secondary)', marginTop: '5px'}}>
+              Note: Request costs for models with tiered pricing (Sonar, Sonar Pro, Sonar Reasoning, Sonar Reasoning Pro) are based on the 'Medium' tier.
+            </div>
           </div>
         </div>
 

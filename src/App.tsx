@@ -13,15 +13,10 @@ declare global {
 const MODELS = [
   'sonar-pro',
   'sonar',
-  'llama-3.1-sonar-small-128k-online',
-  'llama-3.1-sonar-large-128k-online',
-  'llama-3.1-sonar-huge-128k-online'
-];
-
-const LEGACY_MODELS = [
-  'llama-3.1-sonar-small-128k-online',
-  'llama-3.1-sonar-large-128k-online',
-  'llama-3.1-sonar-huge-128k-online'
+  'sonar-reasoning-pro',
+  'sonar-reasoning',
+  'sonar-deep-research',
+  'r1-1776'
 ];
 
 interface ModelResponse {
@@ -57,19 +52,37 @@ const getActiveApiKey = (inputKey: string, envKey: string): string => {
 
 // Add pricing constants
 const PRICING = {
-  'sonar-pro': { 
-    requestPrice: 0.005,  // Base request cost
-    inputTokenPrice: 0.000003,  // $0.003/1k tokens
-    outputTokenPrice: 0.000015  // $0.015/1k tokens
+  'sonar-pro': {
+    requestPrice: 0.01,
+    inputTokenPrice: 0.000003,
+    outputTokenPrice: 0.000015
   },
-  'sonar': { 
-    requestPrice: 0.005,  // Base request cost
-    inputTokenPrice: 0.000001,  // $0.001/1k tokens
-    outputTokenPrice: 0.000001  // $0.001/1k tokens
+  'sonar': {
+    requestPrice: 0.008,
+    inputTokenPrice: 0.000001,
+    outputTokenPrice: 0.000001
   },
-  'llama-3.1-sonar-small-128k-online': { requestPrice: 0.005, tokenPrice: 0.0002 },
-  'llama-3.1-sonar-large-128k-online': { requestPrice: 0.005, tokenPrice: 0.001 },
-  'llama-3.1-sonar-huge-128k-online': { requestPrice: 0.005, tokenPrice: 0.005 }
+  'sonar-reasoning-pro': {
+    requestPrice: 0.01,
+    inputTokenPrice: 0.000002,
+    outputTokenPrice: 0.000008
+  },
+  'sonar-reasoning': {
+    requestPrice: 0.008,
+    inputTokenPrice: 0.000001,
+    outputTokenPrice: 0.000005
+  },
+  'sonar-deep-research': {
+    requestPrice: 0.005,
+    inputTokenPrice: 0.000002,
+    outputTokenPrice: 0.000008,
+    reasoningTokenPrice: 0.000003 // Added for sonar-deep-research
+  },
+  'r1-1776': {
+    requestPrice: 0, // Assuming $0 request price for offline model
+    inputTokenPrice: 0.000002,
+    outputTokenPrice: 0.000008
+  }
 };
 
 // Add API key validation
@@ -82,46 +95,44 @@ const getCostBreakdown = (model: string, tokens: { prompt: number, completion: n
   const pricing = PRICING[model as keyof typeof PRICING];
   if (!pricing) return { requestCost: '--', tokenCost: '--', total: '--' };
 
-  if ('tokenPrice' in pricing) {
-    // Legacy model pricing
-    const requestCost = pricing.requestPrice;
-    const tokenCost = ((tokens.prompt + tokens.completion) * pricing.tokenPrice / 1000);
-    return {
-      requestCost: `$${requestCost.toFixed(3)}`,
-      tokenCost: `$${tokenCost.toFixed(6)}`,
-      total: `$${(requestCost + tokenCost).toFixed(6)}`
-    };
-  } else {
-    // New Sonar model pricing
-    const requestCost = pricing.requestPrice;
-    const inputCost = tokens.prompt * pricing.inputTokenPrice;
-    const outputCost = tokens.completion * pricing.outputTokenPrice;
-    const totalTokenCost = inputCost + outputCost;
-    return {
-      requestCost: `$${requestCost.toFixed(3)}`,
-      tokenCost: `$${totalTokenCost.toFixed(6)}`,
-      total: `$${(requestCost + totalTokenCost).toFixed(6)}`
-    };
+  const requestCost = pricing.requestPrice;
+  const inputCost = tokens.prompt * pricing.inputTokenPrice;
+  const outputCost = tokens.completion * pricing.outputTokenPrice;
+  
+  let reasoningCost = 0;
+  if ('reasoningTokenPrice' in pricing && pricing.reasoningTokenPrice) {
+    // Ensure reasoningTokenPrice is treated as a number
+    reasoningCost = tokens.completion * pricing.reasoningTokenPrice;
   }
+  
+  const totalTokenCost = inputCost + outputCost + reasoningCost;
+  
+  return {
+    requestCost: `$${requestCost.toFixed(3)}`,
+    tokenCost: `$${totalTokenCost.toFixed(6)}`,
+    total: `$${(requestCost + totalTokenCost).toFixed(6)}`
+  };
 };
 
 const getModelInfo = (model: string): { cost: string, context: string } => {
-  if (model === 'sonar-pro') return {
-    cost: '$0.003/1k in • $0.015/1k out',
-    context: '200k'
-  };
-  if (model === 'sonar') return {
-    cost: '$0.001/1k tokens',
-    context: '127k'
-  };
-  if (isLegacyModel(model)) return {
-    cost: `$${model.includes('small') ? '0.0002' : model.includes('large') ? '0.001' : '0.005'}/1k tokens`,
-    context: '127k'
-  };
-  return { cost: '--', context: '--' };
+  switch (model) {
+    case 'sonar-pro':
+      return { cost: '$3/M in • $15/M out + $0.01/req', context: '200k' };
+    case 'sonar':
+      return { cost: '$1/M in • $1/M out + $0.008/req', context: '128k' };
+    case 'sonar-reasoning-pro':
+      return { cost: '$2/M in • $8/M out + $0.01/req', context: '128k' };
+    case 'sonar-reasoning':
+      return { cost: '$1/M in • $5/M out + $0.008/req', context: '128k' };
+    case 'sonar-deep-research':
+      // Note: $0.005/req is per search query. Reasoning tokens are $3/M.
+      return { cost: '$2/M in • $8/M out • $3/M reasoning + $0.005/req', context: '128k' };
+    case 'r1-1776':
+      return { cost: '$2/M in • $8/M out (Offline)', context: '128k' };
+    default:
+      return { cost: '--', context: '--' };
+  }
 };
-
-const isLegacyModel = (model: string): boolean => LEGACY_MODELS.includes(model);
 
 function App() {
   const [prompt, setPrompt] = useState('');
@@ -452,20 +463,22 @@ function App() {
             <div className="cost-info">
               Base request: $0.005 per search
             </div>
+            <div className="cost-info-tier-note" style={{fontSize: '0.8em', color: 'var(--text-secondary)', marginTop: '5px'}}>
+              Note: Request costs for models with tiered pricing (Sonar, Sonar Pro, Sonar Reasoning, Sonar Reasoning Pro) are based on the 'Medium' tier.
+            </div>
           </div>
         </div>
 
         <div className="responses">
-          {/* Current Models */}
-          {MODELS.slice(0, 2).map(model => {
+          {MODELS.map(model => {
             const response = sortedResponses.find(r => r.modelId === model);
             const status = modelStatuses.find(s => s.modelId === model)!;
             const info = getModelInfo(model);
             
             return (
-              <div key={model} className="response-card">
+              <div key={model} className="response-card"> {/* No 'legacy' class */}
                 <h3>
-                  {model}
+                  {model} {/* Consistent model naming */}
                   <span className="model-info">
                     <span className="model-context">{info.context}</span>
                     <span className="model-cost">{info.cost}</span>
@@ -480,8 +493,12 @@ function App() {
                       <span className="tooltip-content">
                         Base request: {getCostBreakdown(model, response.tokens).requestCost}<br />
                         Tokens: {getCostBreakdown(model, response.tokens).tokenCost}
-                        {model === 'sonar-pro' && (
+                        {/* Display special note for sonar-pro or other models if needed in the future */}
+                        {model === 'sonar-pro' && ( 
                           <><br /><br />Note: Actual cost may be higher due to multiple searches</>
+                        )}
+                         {model === 'sonar-deep-research' && (
+                          <><br /><br />Note: Cost includes reasoning tokens if applicable.</>
                         )}
                       </span>
                     )}
@@ -519,69 +536,6 @@ function App() {
               </div>
             );
           })}
-
-          {/* Legacy Models */}
-          <div className="legacy-models">
-            {MODELS.slice(2).map(model => {
-              const response = sortedResponses.find(r => r.modelId === model);
-              const status = modelStatuses.find(s => s.modelId === model)!;
-              const info = getModelInfo(model);
-              
-              return (
-                <div key={model} className="response-card legacy">
-                  <h3>
-                    {model.split('-')[3].toUpperCase()}
-                    <span className="model-info">
-                      <span className="model-context">{info.context}</span>
-                      <span className="model-cost">{info.cost}</span>
-                    </span>
-                  </h3>
-                  <div className="metadata">
-                    <span>Response time: {response ? formatTime(response.responseTime) : '--'}</span>
-                    <span>Tokens: {response ? response.tokens.total : '--'}</span>
-                    <span className="tooltip">
-                      Cost: {response ? getCostBreakdown(model, response.tokens).total : '--'}
-                      {response && (
-                        <span className="tooltip-content">
-                          Base request: {getCostBreakdown(model, response.tokens).requestCost}<br />
-                          Tokens: {getCostBreakdown(model, response.tokens).tokenCost}
-                        </span>
-                      )}
-                    </span>
-                  </div>
-                  <div className="response-content">
-                    {status.status === 'error' ? (
-                      <div className="error">{status.error}</div>
-                    ) : response ? (
-                      <>
-                        <div className="markdown-content">
-                          <ReactMarkdown>{response.response}</ReactMarkdown>
-                          {response.citations && response.citations.length > 0 && (
-                            <div className="citations">
-                              <h4>References:</h4>
-                              <ol>
-                                {response.citations.map((citation, index) => (
-                                  <li key={index}>
-                                    <a href={citation} target="_blank" rel="noopener noreferrer">
-                                      {citation}
-                                    </a>
-                                  </li>
-                                ))}
-                              </ol>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    ) : status.status === 'loading' ? (
-                      <div className="loading-state">Waiting for response...</div>
-                    ) : (
-                      'Response will appear here...'
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </main>
     </div>
